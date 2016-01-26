@@ -171,6 +171,7 @@ class Camomile(object):
         if id_queue:
             queue = queue(id_queue)
         return queue
+    
 
     def _id(self, result):
         if isinstance(result, list):
@@ -533,6 +534,7 @@ class Camomile(object):
         result = self._corpus().post(data=data)
         return self._id(result) if returns_id else result
 
+
     @catchCamomileError
     def updateCorpus(self, corpus, name=None, description=None):
         """Update corpus
@@ -556,6 +558,31 @@ class Camomile(object):
         if description:
             data['description'] = description
 
+        return self._corpus(corpus).put(data=data)
+
+
+    @catchCamomileError
+    def updateCorpusMetadata(self, corpus, metadata=None):
+        """Update corpus metadata
+
+        Parameters
+        ----------
+        corpus : str
+            Corpus ID
+        metadata: dict
+           { key: values}
+
+        Returns
+        -------
+        corpus : dict
+            Updated corpus.
+
+        """
+	data={}
+        if metadata is None:
+            raise ValueError('')
+	data['metadata'] = metadata
+	print data['metadata']
         return self._corpus(corpus).put(data=data)
 
     @catchCamomileError
