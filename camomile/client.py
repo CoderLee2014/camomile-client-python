@@ -177,6 +177,12 @@ class Camomile(object):
         if isinstance(result, list):
             return [r._id for r in result]
         return result._id
+    def _metadata(self, id_metadata=None):
+        metadata = self._api.metadata
+        if id_metadata:
+            metadata = metadata(id_metadata)
+        return metadata
+  
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # AUTHENTICATION
@@ -562,7 +568,7 @@ class Camomile(object):
 
 
     @catchCamomileError
-    def updateCorpusMetadata(self, corpus, metadata=None):
+    def updateCorpusMetadata(self, corpus, key, value):
         """Update corpus metadata
 
         Parameters
@@ -579,11 +585,11 @@ class Camomile(object):
 
         """
 	data={}
-        if metadata is None:
+        if (key== ''):
             raise ValueError('')
-	data['metadata'] = metadata
-	print data['metadata']
-        return self._corpus(corpus).put(data=data)
+	data['key'] = key
+	data['value'] = value
+        return self._corpus(corpus).metadata.put(data=data)
 
     @catchCamomileError
     def deleteCorpus(self, corpus):
@@ -745,6 +751,30 @@ class Camomile(object):
             data['description'] = description
 
         return self._medium(medium).put(data=data)
+
+    @catchCamomileError
+    def updateMediumMetadata(self, medium, key, value):
+        """Update Medium metadata
+
+        Parameters
+        ----------
+        medium : str
+            Corpus ID
+        metadata: dict
+           { key: values}
+
+        Returns
+        -------
+        message : str
+            Updated Successfully.
+
+        """
+	data={}
+        if (key== ''):
+            raise ValueError('')
+	data['key'] = key
+	data['value'] = value
+        return self._medium(medium).metadata.put(data=data)
 
     @catchCamomileError
     def deleteMedium(self, medium):
@@ -917,6 +947,29 @@ class Camomile(object):
             data['data_type'] = data_type
 
         return self._layer(layer).put(data=data)
+    @catchCamomileError
+    def updateLayerMetadata(self, layer, key, value):
+        """Update layer metadata
+
+        Parameters
+        ----------
+        layer : str
+            Corpus ID
+        metadata: dict
+           { key: values}
+
+        Returns
+        -------
+        message : str
+           key is Updated Successfully.
+
+        """
+	data={}
+        if (key== ''):
+            raise ValueError('')
+	data['key'] = key
+	data['value'] = value
+        return self._layer(layer).metadata.put(data=data)
 
     @catchCamomileError
     def deleteLayer(self, layer):
@@ -1486,3 +1539,28 @@ class Camomile(object):
     @catchCamomileError
     def getDate(self):
         return self._api.date.get()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Metadata
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @catchCamomileError
+    def createMetadata(self, id_owner, description=None, returns_id=False):
+        """Create new corpus
+
+        Parameters
+        ----------
+      
+        description : object, optional
+            Corpus description. Must be JSON-serializable.
+        returns_id : boolean, optional.
+            Returns IDs rather than dictionaries.
+
+        Returns
+        -------
+        corpus : dict
+            Newly created corpus.
+        """
+        data = {'owner': id_owner,
+                'description': description if description else {}}
+        result = self._metadata().post(data=data)
+        return self._id(result) if returns_id else result
