@@ -592,7 +592,7 @@ class Camomile(object):
         return self._corpus(corpus).metadata.put(data=data)
    
     @catchCamomileError
-    def getCorpusMetadata(self, corpus, key,returns_id=False):
+    def getCorpusMetadata(self, corpus, key=None,returns_id=False):
 	"""Get corpus metadata
 	Parameters
  	-------------
@@ -602,7 +602,7 @@ class Camomile(object):
 		metadata key
 	Returns
 	------------
-		
+	corpus.metadata : dict	
 	"""   
 	params={};
         if key:
@@ -621,7 +621,7 @@ class Camomile(object):
 		metadata key
 	Returns
 	------------
-		
+	A message of success	
 	"""   
 	params={};
 	params['name'] = key
@@ -791,30 +791,6 @@ class Camomile(object):
         return self._medium(medium).put(data=data)
 
     @catchCamomileError
-    def updateMediumMetadata(self, medium, key, value):
-        """Update Medium metadata
-
-        Parameters
-        ----------
-        medium : str
-            Corpus ID
-        metadata: dict
-           { key: values}
-
-        Returns
-        -------
-        message : str
-            Updated Successfully.
-
-        """
-	data={}
-        if (key== ''):
-            raise ValueError('')
-	data['key'] = key
-	data['value'] = value
-        return self._medium(medium).metadata.put(data=data)
-
-    @catchCamomileError
     def deleteMedium(self, medium):
         """Delete existing medium
 
@@ -841,6 +817,66 @@ class Camomile(object):
             format = 'video'
 
         return self._medium(medium).get(format)
+    @catchCamomileError
+    def updateMediumMetadata(self, medium, key, value):
+        """Update Medium metadata
+
+        Parameters
+        ----------
+        medium : str
+            Medium ID
+        metadata: dict
+           { key: values}
+
+        Returns
+        -------
+        message : str
+            Updated Successfully.
+
+        """
+	data={}
+        if (key== ''):
+            raise ValueError('')
+	data['key'] = key
+	data['value'] = value
+        return self._medium(medium).metadata.put(data=data)
+ 
+    @catchCamomileError
+    def getMediumMetadata(self, medium, key=None,returns_id=False):
+	"""Get medium metadata
+	Parameters
+ 	-------------
+	medium : str
+		Medium ID
+ 	key : str
+		metadata key
+	Returns
+	------------
+        Medium.metadata : dict	
+	"""   
+	params={};
+        if key:
+		params['name'] = key
+        result = self._medium(medium).metadata.get(params=params)
+        return self._id(result) if returns_id else result
+
+    @catchCamomileError
+    def deleteMediumMetadata(self, medium, key='',returns_id=False):
+	"""Delete medium metadata
+	Parameters
+ 	-------------
+	medium : str
+		Medium ID
+ 	key : str
+		metadata key
+	Returns
+	------------
+	A message of success	
+	"""   
+	params={};
+	params['name'] = key
+        result = self._medium(medium).metadata.delete(params=params)
+        return self._id(result) if returns_id else result
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # LAYERS
@@ -985,6 +1021,18 @@ class Camomile(object):
             data['data_type'] = data_type
 
         return self._layer(layer).put(data=data)
+
+    @catchCamomileError
+    def deleteLayer(self, layer):
+        """Delete layer
+
+        Parameters
+        ----------
+        layer : str
+            Layer ID
+        """
+        return self._layer(layer).delete()
+
     @catchCamomileError
     def updateLayerMetadata(self, layer, key, value):
         """Update layer metadata
@@ -992,7 +1040,7 @@ class Camomile(object):
         Parameters
         ----------
         layer : str
-            Corpus ID
+            Layer ID
         metadata: dict
            { key: values}
 
@@ -1010,15 +1058,41 @@ class Camomile(object):
         return self._layer(layer).metadata.put(data=data)
 
     @catchCamomileError
-    def deleteLayer(self, layer):
-        """Delete layer
+    def getLayerMetadata(self, layer, key=None,returns_id=False):
+	"""Get layer metadata
+	Parameters
+ 	-------------
+	layer : str
+		Layer ID
+ 	key : str
+		metadata key
+	Returns
+	------------
+        Layer.metadata : dict	
+	"""   
+	params={};
+        if key:
+		params['name'] = key
+        result = self._layer(layer).metadata.get(params=params)
+        return self._id(result) if returns_id else result
 
-        Parameters
-        ----------
-        layer : str
-            Layer ID
-        """
-        return self._layer(layer).delete()
+    @catchCamomileError
+    def deleteLayerMetadata(self, layer, key='',returns_id=False):
+	"""Delete layer metadata
+	Parameters
+ 	-------------
+	layer : str
+		Layer ID
+ 	key : str
+		metadata key
+	Returns
+	------------
+	A message of success	
+	"""   
+	params={};
+	params['name'] = key
+        result = self._layer(layer).metadata.delete(params=params)
+        return self._id(result) if returns_id else result
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # ANNOTATIONS
