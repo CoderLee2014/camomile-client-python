@@ -1,0 +1,3 @@
+from camomile import Camomile
+client = Camomile('http://localhost:20000',debug=True);
+client.login('root','11');

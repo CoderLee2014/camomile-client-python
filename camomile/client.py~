@@ -611,7 +611,7 @@ class Camomile(object):
         return self._id(result) if returns_id else result
 
     @catchCamomileError
-    def deleteCorpusMetadata(self, corpus, key='',returns_id=False):
+    def deleteCorpusMetadata(self, corpus, key=None,returns_id=False):
 	"""Delete corpus metadata
 	Parameters
  	-------------
