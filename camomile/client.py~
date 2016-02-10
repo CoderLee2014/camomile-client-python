@@ -866,7 +866,7 @@ class Camomile(object):
 	Parameters
  	-------------
 	medium : str
-		Medium ID
+		Corpus ID
  	key : str
 		metadata key
 	Returns
